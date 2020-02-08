@@ -45,9 +45,14 @@ export class TaskRepository extends Repository<Task> {
     task.status = TaskStatus.OPEN;
     task.user = user;
 
-    await task.save();
-    delete task.user;
+    try {
+      await task.save();
+    } catch (error) {
+      this.logger.error(`Failed to create a task for user "${user.username}". Data: ${JSON.stringify(createTaskDto)}`, error.stack);
+      throw new InternalServerErrorException();
+    }
 
+    delete task.user;
     return task;
   }
 
