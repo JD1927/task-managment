@@ -1,18 +1,21 @@
 import { duplicateUsernameCode } from './../shared/http-request.code';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { SignUpCredentialsDto } from './dto/sign-up-credentials.dto';
 import { Repository, EntityRepository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { ConflictException, InternalServerErrorException } from '@nestjs/common';
+import { SignInCredentialsDto } from './dto/sign-in-credentials.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username, password } = authCredentialsDto;
+  async signUp(signUpCredentialsDto: SignUpCredentialsDto): Promise<void> {
+    const { username, password, name, birthDate } = signUpCredentialsDto;
 
     const user = new User();
     user.username = username;
+    user.name = name;
+    user.birthDate = birthDate;
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
 
@@ -27,12 +30,12 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-    const { username, password } = authCredentialsDto;
+  async validateUserPassword(signInCredentialsDto: SignInCredentialsDto): Promise<User> {
+    const { username, password } = signInCredentialsDto;
     const user = await this.findOne({ username });
 
     if (user && await user.validatePassword(password)) {
-      return user.username;
+      return user;
     } else {
       return null;
     }

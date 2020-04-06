@@ -13,7 +13,7 @@ import { TaskStatus } from './task-status.enum';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 
-@Controller('tasks')
+@Controller('api/tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
   private logger = new Logger('TasksController');
