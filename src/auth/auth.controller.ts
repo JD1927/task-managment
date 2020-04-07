@@ -5,16 +5,19 @@ import { SignUpCredentialsDto } from './dto/sign-up-credentials.dto';
 
 @Controller('api/auth')
 export class AuthController {
-
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Post('/signup')
-  signUp(@Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto): Promise<any> {
+  signUp(
+    @Body(ValidationPipe) signUpCredentialsDto: SignUpCredentialsDto,
+  ): Promise<any> {
     return this.authService.signUp(signUpCredentialsDto);
   }
 
   @Post('/signin')
-  signIn(@Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto): Promise<{ accessToken: string }> {
+  signIn(
+    @Body(ValidationPipe) signInCredentialsDto: SignInCredentialsDto,
+  ): Promise<{ accessToken: string }> {
     return this.authService.signIn(signInCredentialsDto);
   }
 }

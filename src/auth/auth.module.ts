@@ -22,13 +22,7 @@ const jwtConfig = config.get('jwt');
     TypeOrmModule.forFeature([UserRepository]),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-  ],
-  exports: [
-    JwtStrategy,
-    PassportModule,
-  ],
+  providers: [AuthService, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
-export class AuthModule { }
+export class AuthModule {}

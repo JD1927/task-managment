@@ -12,12 +12,9 @@ export class TasksService {
   constructor(
     @InjectRepository(TaskRepository)
     private taskRepository: TaskRepository,
-  ) { }
+  ) {}
 
-  async createTask(
-    createTaskDto: CreateTaskDto,
-    user: User,
-  ): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     return this.taskRepository.createTask(createTaskDto, user);
   }
 
@@ -33,7 +30,11 @@ export class TasksService {
     return this.taskRepository.deleteTaskById(id, user);
   }
 
-  async updateTaskStatus(id: number, status: TaskStatus, user: User): Promise<Task> {
+  async updateTaskStatus(
+    id: number,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task> {
     return this.taskRepository.updateTaskStatus(id, status, user);
   }
 }

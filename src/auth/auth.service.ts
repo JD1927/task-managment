@@ -16,14 +16,18 @@ export class AuthService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signUp(authCredentialsDto: SignUpCredentialsDto): Promise<void> {
     return this.userRepository.signUp(authCredentialsDto);
   }
 
-  async signIn(signInCredentialsDto: SignInCredentialsDto): Promise<SignInResponse> {
-    const user = await this.userRepository.validateUserPassword(signInCredentialsDto);
+  async signIn(
+    signInCredentialsDto: SignInCredentialsDto,
+  ): Promise<SignInResponse> {
+    const user = await this.userRepository.validateUserPassword(
+      signInCredentialsDto,
+    );
 
     if (!user) {
       throw new UnauthorizedException(`Invalid credentials`);
@@ -36,7 +40,9 @@ export class AuthService {
     const decodedAccestoken = jwtDecode(accessToken);
     const { exp: expiresAt } = decodedAccestoken;
 
-    this.logger.debug(`Generated JWT Token with payload ${JSON.stringify(payload)}`);
+    this.logger.debug(
+      `Generated JWT Token with payload ${JSON.stringify(payload)}`,
+    );
 
     return { accessToken, name, username, birthDate, expiresAt };
   }

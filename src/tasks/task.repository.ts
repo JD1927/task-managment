@@ -1,10 +1,14 @@
-import { Repository, EntityRepository } from 'typeorm';
-import { Task } from './task.entity';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { TaskStatus } from './task-status.enum';
-import { NotFoundException, Logger, InternalServerErrorException } from '@nestjs/common';
-import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import {
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from 'src/auth/user.entity';
+import { EntityRepository, Repository } from 'typeorm';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { TaskStatus } from './task-status.enum';
+import { Task } from './task.entity';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
@@ -31,7 +35,12 @@ export class TaskRepository extends Repository<Task> {
       const tasks = await query.getMany();
       return tasks;
     } catch (error) {
-      this.logger.error(`Failed to get tasks for user "${user.username}", DTO: ${JSON.stringify(filterDto)}`, error.stack);
+      this.logger.error(
+        `Failed to get tasks for user "${user.username}", DTO: ${JSON.stringify(
+          filterDto,
+        )}`,
+        error.stack,
+      );
       throw new InternalServerErrorException();
     }
   }
@@ -48,7 +57,12 @@ export class TaskRepository extends Repository<Task> {
     try {
       await task.save();
     } catch (error) {
-      this.logger.error(`Failed to create a task for user "${user.username}". Data: ${JSON.stringify(createTaskDto)}`, error.stack);
+      this.logger.error(
+        `Failed to create a task for user "${
+          user.username
+        }". Data: ${JSON.stringify(createTaskDto)}`,
+        error.stack,
+      );
       throw new InternalServerErrorException();
     }
 
@@ -72,7 +86,11 @@ export class TaskRepository extends Repository<Task> {
     }
   }
 
-  async updateTaskStatus(id: number, status: TaskStatus, user: User): Promise<Task> {
+  async updateTaskStatus(
+    id: number,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task> {
     const task = await this.getTaskById(id, user);
     task.status = status;
     await task.save();
